@@ -1,30 +1,26 @@
 
-# EX 4B Frog Jump - Dynamic Programming.
-## DATE: 18/08/26
+# EX 4C Coin Change Problem - Dynamic Programming.
+## DATE: 19/08/26
 ## AIM:
 To write a Java program to for given constraints.
-A Frog Jump 1 or 2 steps at a time.
-Problem Statement:
+You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
 
-A frog is at the bottom of the stairs with n steps. It can jump either 1 or 2 steps at a time. Write a program to find the number of distinct ways the frog can reach the top (n-th step).
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
 
-Input Format:
-
-A single integer n (1 ≤ n ≤ 45) – number of steps.
- Output Format:
-
-A single integer – number of distinct ways to reach step n.
+You may assume that you have an infinite number of each kind of coin.
 
 ## Algorithm
-1.Start and read the number of steps n.
+1.Start and read the list of coin denominations and the target amount.
 
-2.If n <= 1, there is only one way to reach the top.
+2.Initialize a DP array dp[] of size amount + 1, where dp[i] stores the minimum number of coins to make amount i.
 
-3.Create a DP array dp[] where dp[i] stores the number of ways to reach step i.
+3.Set all values in dp[] to a large number (amount + 1) and set dp[0] = 0.
 
-4.Initialize dp[0] = 1 and dp[1] = 1, then use the relation dp[i] = dp[i-1] + dp[i-2] for i ≥ 2.
+4.For each amount i from 1 to amount, check all coins:
+If coin <= i, update dp[i] = min(dp[i], dp[i - coin] + 1).
 
-5.Output dp[n], which represents the total number of ways the frog can reach the top.
+5.Return dp[amount] if it’s valid; otherwise, return -1 (not possible).
+  
 
 ## Program:
 ```
@@ -33,33 +29,49 @@ Program to implement Reverse a String
 Developed by: MANIKANDAN T
 Register Number: 212224110037
 */
-import java.util.Scanner;
 
-public class FrogJump {
+import java.util.*;
+
+public class Solution {
+    public int coinChange(int[] coins, int amount) {
+        //ADD YOUR CODE HERE
+        int max=amount+1;
+        int[] dp =new int[amount+1];
+        Arrays.fill(dp,max);
+        dp[0]=0;
+        for(int i=1;i<=amount;i++) {
+            for(int coin : coins) {
+                if(coin<=i) {
+                    dp[i]=Math.min(dp[i],dp[i-coin]+1);
+                }
+            }
+        }
+       return dp[amount]>amount?-1:dp[amount]; 
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        scanner.close();
-        System.out.println(countWays(n));
-    }
-
-    public static int countWays(int n) {
-        if (n <= 1) return 1;
-        int[] dp = new int[n + 1];
-        dp[0] = 1;
-        dp[1] = 1;
-        for (int i = 2; i <= n; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2];
+        Solution solution = new Solution();
+        String coinsLine = scanner.nextLine(); 
+        String amountLine = scanner.nextLine();
+        coinsLine = coinsLine.replaceAll("[^0-9,]", ""); 
+        String[] coinsStr = coinsLine.split(",");
+        int[] coins = new int[coinsStr.length];
+        for (int i = 0; i < coinsStr.length; i++) {
+            coins[i] = Integer.parseInt(coinsStr[i]);
         }
-        return dp[n];
+        int amount = Integer.parseInt(amountLine.replaceAll("[^0-9]", ""));
+        int result = solution.coinChange(coins, amount);
+        System.out.println(result);
+
+        scanner.close();
     }
 }
-
 ```
 
 ## Output:
 
-<img width="321" height="182" alt="image" src="https://github.com/user-attachments/assets/ff2462bc-1737-4f29-ba66-c61d96f933b8" />
+<img width="330" height="237" alt="image" src="https://github.com/user-attachments/assets/1f5a12a7-91cc-43c4-adef-77e96d3751ef" />
 
 
 ## Result:
